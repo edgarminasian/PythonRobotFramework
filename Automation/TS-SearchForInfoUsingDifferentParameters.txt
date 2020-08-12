@@ -1,0 +1,673 @@
+*** Settings ***
+Suite Setup       LaunchBrowserAndLogin
+Suite Teardown    Close Browser TC
+Library           Selenium2Library
+Library           Collections
+Library           re
+Variables         Date.py
+Library           String
+Resource          PageLocators/AddCashReceiptLog.robot
+Resource          PageLocators/SearchForCash.robot
+Resource          PageLocators/ContractInvoicePreferences.robot
+Resource          PageLocators/ApproveCashApplication.robot
+Resource          PageLocators/SearchForBillingByStartOrderDate.robot
+Resource          PageLocators/SearchForMiscellaneousCredit.robot
+Resource          PageLocators/SearchForMiscellaneousBilling.robot
+Resource          PageLocators/SearchForBillingSchedule.robot
+Resource          PageLocators/SearchForInvoice_CreditMemo.robot
+Resource          PageLocators/SearchForContract.robot
+Resource          PageLocators/SearchForCustomer.robot
+Resource          PageLocators/searchForBillingTriggerDatesFromMenu.robot
+Resource          PageLocators/AddMiscellaneousBilling.robot
+Resource          PageLocators/SearchForInvoice_CreditMemo.robot
+Resource          PageLocators/AddMiscellaneousCreditMemo.robot
+Resource          PageLocators/SearchForMobileStartOrder.robot
+Resource          KeyWords/Variable.robot
+Resource          KeyWords/Resources.robot
+Resource          KeyWords/2FALogin.robot
+Resource          KeyWords/Global_Variables.robot
+
+*** Variables ***
+${Status}         Posted
+
+*** Test Cases ***
+TC02_Select Customer for Contract Invoice Preferences
+    Set Selenium Speed    .1
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${ContractInvoicePreferencesTab}
+    Wait Until Element Is Visible    ${CIP-CustomerName-btn}    timeout=45s
+    Click Element    ${CIP-CustomerName-btn}
+    Wait Until Keyword Succeeds    100s    .2s    Select Window    Customer Search
+    Wait Until Element Is Visible    ${CIP-CustSearch-CustNumber}    timeout=45s
+    Input Text    xpath=//input[@id='customerNumber'][@placeholder='Customer No.']    80100
+    Click Element    ${CIP-CustSearch-SearchSubmit}
+    Wait Until Element Is Visible    ${CIP-SelectedCustomer}    timeout=45s
+    Click Element    ${CIP-SelectedCustomer}
+    Click Element    ${CIP-MultipleCustomer}
+    Wait Until Keyword Succeeds    100s    .2s    Select Window    Contract Invoice Preferences
+    Wait Until Element Is Visible    xpath=//input[@name='customerNo'][@placeholder='Customer No.']    timeout=45s
+    ${CustNo}    Get Value    xpath=//input[@name='customerNo'][@placeholder='Customer No.']
+    Should Be Equal    ${CustNo}    80100
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC06_Calendar test for Contract Invoice Preferences
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${ContractInvoicePreferencesTab}
+    Wait Until Element Is Visible    ${CIP-CustomerName-btn}    timeout=45s
+    Click Element    ${CIP-CustomerName-btn}
+    Wait Until Keyword Succeeds    100s    .2s    Select Window    Customer Search
+    Wait Until Element Is Visible    ${CIP-CustSearch-CustNumber}    timeout=45s
+    Input Text    xpath=//input[@id='customerNumber'][@placeholder='Customer No.']    80100
+    Click Element    ${CIP-CustSearch-SearchSubmit}
+    Wait Until Element Is Visible    ${CIP-SelectedCustomer}    timeout=45s
+    Click Element    ${CIP-SelectedCustomer}
+    Click Element    ${CIP-MultipleCustomer}
+    Wait Until Keyword Succeeds    100s    .2s    Select Window    Contract Invoice Preferences
+    Wait Until Element Is Visible    xpath=//input[@name='customerNo'][@placeholder='Customer No.']    timeout=45s
+    ${CustNo}    Get Value    xpath=//input[@name='customerNo'][@placeholder='Customer No.']
+    Should Be Equal    ${CustNo}    80100
+    Click Element    ${CIP-SearchForCust-V2}
+    Scroll Page To Location    0    100
+    Wait Until Element Is Visible    ${CIP-PayStatementStartDate}    timeout=45s
+    Input Text    ${CIP-PayStatementStartDate}    01-Nov-2016
+    Input Text    ${CIP-PayStatementEndDate}    01-Nov-2017
+    Log To Console    The Inputs Work Fine
+    Sleep    2s
+
+TC01_Search billing by contract number_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingByStartOrder}
+    Comment    Wait Until Element Is Visible    ${SFBBS-ContractNo}    timeout=45s
+    Comment    Input Text    ${SFBBS-ContractNo}    VEN15P001X
+    Comment    Press Key    ${SFBBS-ContractNo}    \\09
+    Comment    Wait Until Element Is Visible    xpath=//select[@id='dealTerm']//option[2]    timeout=45s
+    Comment    Click Element    ${SFBBS-Search}
+    Comment    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]    timeout=45s
+    Comment    Log To Console    Contract Number is visible at "Search Billing For Start Order Date"
+    Comment    Sleep    2s
+
+TC04_Search billing by contract number and combination of payment term and deal term_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingByStartOrder}
+    Comment    Wait Until Element Is Visible    ${SFBBS-ContractNo}    timeout=45s
+    Comment    Input Text    ${SFBBS-ContractNo}    VEN15P001X
+    Comment    Press Key    ${SFBBS-ContractNo}    \\09
+    Comment    Wait Until Element Is Visible    xpath=//select[@id='dealTerm']//option[2]    timeout=45s
+    Comment    Click Element    xpath=//select[@id='dealTerm']//option[2]
+    Comment    Click Element    ${SFBBS-PaymentTerm}
+    Comment    Click Element    xpath=//select[@id='paymentTerm']//option[2]
+    Comment    Click Element    ${SFBBS-Search}
+    Comment    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]    timeout=45s
+    Comment    Log To Console    Contract Number is visible at "Search Billing For Start Order Date"
+    Comment    Sleep    2s
+
+TC05_Search for billing by start order number_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingByStartOrder}
+    Comment    Wait Until Element Is Visible    ${SFBBS-StartOrderNo}    timeout=45s
+    Comment    Input Text    ${SFBBS-StartOrderNo}    VEN6PS06
+    Comment    Press Key    ${SFBBS-StartOrderNo}    \\09
+    Comment    Click Element    ${SFBBS-Search}
+    Comment    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]    timeout=45s
+    Comment    Click Link    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[4]/a[1]
+    Comment    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]    timeout=45s
+    Comment    Log To Console    Results are fetched successfully
+    Comment    Sleep    2s
+
+TC08_Search billing by start order number with show advanced billing_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingByStartOrder}
+    Comment    Wait Until Element Is Visible    ${SFBBS-StartOrderNo}    timeout=45s
+    Comment    Input Text    ${SFBBS-StartOrderNo}    KOR2DM04
+    Comment    Press Key    ${SFBBS-StartOrderNo}    \\09
+    Comment    Select Checkbox    ${SFBBS-ShowAdvancedBilling}
+    Comment    Click Element    ${SFBBS-Search}
+    Comment    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]    timeout=45s
+    Comment    Click Link    xpath=/html[1]/body[1]/div[3]/table[3]/tbody[1]/tr[1]/td[2]/a[1]
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Title Should Be    Contract
+    Comment    Log To Console    Results are fetched successfully
+    Comment    Sleep    2s
+
+TC01_Search contract by contract number
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ContractNum-Input}    timeout=45s
+    Click Element    ${SFB-SearchType1-Btn}
+    Input Text    ${SFB-ContractNum-Input}    FCN14S001Y
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Element Is Visible    xpath=//table[@class='dx-datagrid-table dx-datagrid-table-fixed']/tbody[1]/tr[1]/td[3]/p[1]    timeout=45s
+    ${ContractNo}    Get Text    xpath=//table[@class='dx-datagrid-table dx-datagrid-table-fixed']/tbody[1]/tr[1]/td[3]/p[1]
+    Should Be Equal    ${ContractNo}    FCN14S001Y
+    Log To Console    Result fetched successfully
+    Sleep    2s
+
+TC02_Search contract by Misc Bill Reference Num
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ReferenceNo}    timeout=45s
+    Click Element    ${SFB-SearchType1-Btn}
+    Input Text    ${SFB-ReferenceNo}    VEN14B002X
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Element Is Visible    xpath=//p[contains(text(),'VEN14B002X')]    timeout=45s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC09_Search contract by Customer Number
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-CustomerNo}    timeout=45s
+    Click Element    ${SFB-SearchType1-Btn}
+    Input Text    ${SFB-CustomerNo}    ${CustomerNumber}
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Element Is Visible    xpath=//td[contains(text(),'${CustomerNumber}')]    timeout=45s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC33_Request for SBR at contract level
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ContractNum-Input}    timeout=45s
+    Click Element    ${SFB-SearchType1-Btn}
+    Input Text    ${SFB-ContractNum-Input}    VEN16B001X
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Element Is Visible    xpath=//body[1]/div[3]/form[1]/div[1]/div[1]/div[1]/div[6]    timeout=45s
+    ${CheckStatus}    Run Keyword And Return Status    Element Should Be Visible    id=specialBillRunList1
+    Run Keyword If    "${CheckStatus}" == "False"    TC33_Error
+    ...    ELSE    TC33_TRUE
+    Sleep    2s
+
+TC04_Search Invoices by Invoice no
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-InvoiceNum}    timeout=45s
+    Input Text    ${SFI-InvoiceNum}    H1404678
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]    timeout=45s
+    Log To Console    Invoice Number Is Visible on the page
+    Sleep    2s
+
+TC02_Search Invoices by Invoice date
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-FormDate-Input}    timeout=45s
+    Input Text    ${SFI-FormDate-Input}    02-Nov-2015
+    Input Text    ${SFI-CustNumber}    80100
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr    timeout=45s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC13_Search Invoices by Contract no
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-FormDate-Input}    timeout=45s
+    Input Text    ${SFI-ContractNum-Input}    PNG14F001Y
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr    timeout=40s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC18_Search Credit Memo by CM no
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-InvoiceNum}    timeout=45s
+    Input Text    ${SFI-InvoiceNum}    30667
+    Click Element    ${Type2Element}
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable1']/tbody[1]/tr[1]/td[1]/a[1]    timeout=40s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC27_Search Credit Memo by Contract no
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-ContractNum-Input}    timeout=45s
+    Input Text    ${SFI-ContractNum-Input}    AUS11P002X
+    Click Element    ${Type2Element}
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable1']/tbody[1]/tr[1]/td[1]/a[1]    timeout=45s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC34_View invoice details
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-InvoiceNum}    timeout=45s
+    Click ELement    ${Type1Element}
+    Input Text    ${SFI-InvoiceNum}    H1404678
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]
+    Click Link    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]/a[1]
+    Wait Until Element Is Visible    xpath=/html[1]/body[1]/div[3]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]    timeout=40s
+    ${InvoiceNo}    Get Text    xpath=/html[1]/body[1]/div[3]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]
+    Should Be Equal    ${InvoiceNo}    H1404678
+    Log To Console    Particular Invoice Number Is Visible
+    Sleep    2s
+
+TC17_Search for cash receipt log by Tracking no
+    NavigateToHomePage
+    Element Should Be Visible    ${CashTab}
+    Mouse Over    ${CashTab}
+    Click Element    ${SearchForCash}
+    Wait Until Element Is Visible    ${SC_TrackNo_input}    timeout=45s
+    Input Text    ${SC_TrackNo_input}    232960
+    Click Button    ${SC_Search_btn}
+    ${Text}    Get Text    xpath=//table[@id='dataTable2']/tbody[1]/tr[1]/td[1]
+    Run Keyword If    "${Text}" == "No data available in table"    Error
+    ...    ELSE    Success
+    Sleep    2s
+
+TC25_Search for cash receipt log by Customer number
+    NavigateToHomePage
+    Element Should Be Visible    ${CashTab}
+    Mouse Over    ${CashTab}
+    Click Element    ${SearchForCash}
+    Wait Until Element Is Visible    ${SC_CustomerNo}    timeout=45s
+    Input Text    ${SC_CustomerNo}    80100
+    Click Button    ${SC_Search_btn}
+    ${Text}    Get Text    xpath=//table[@id='dataTable2']/tbody[1]/tr[1]/td[1]
+    Run Keyword If    "${Text}" == "No data available in table"    Error
+    ...    ELSE    Success
+    Sleep    2s
+
+TC44_Search for cash receipt by Tracking no
+    NavigateToHomePage
+    Element Should Be Visible    ${CashTab}
+    Mouse Over    ${CashTab}
+    Click Element    ${SearchForCash}
+    Wait Until Element Is Visible    ${SC-SearchType2-Select}    timeout=45s
+    Click Element    ${SC-SearchType2-Select}
+    Input Text    ${SC_TrackNo_input}    233047
+    Click Element    ${SC-Version2-SearchBtn}
+    ${Text}    Get Text    xpath=//table[@id='dataTable1']/tbody[1]/tr[1]/td[1]
+    Run Keyword If    "${Text}" == "No data available in table"    Error    Else    Success
+    Sleep    2s
+
+TC14_Search Invoices by Start order no_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForInvoice-CreditMemo}
+    Comment    Wait Until Element Is Visible    ${SFI-StartOrderNum}    timeout=40s
+    Comment    Input Text    ${SFI-StartOrderNum}    UNK9FS16
+    Comment    Click Element    ${SFI-Search}
+    Comment    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr    timeout=45s
+    Comment    Log To Console    Results are fetched successfully
+    Comment    Sleep    2s
+
+TC08_Contracts_Search Contract Screen_Contract Link
+    NavigateToHomePage
+    Element Should Be Visible    ${ContractTab}
+    Mouse Over    ${ContractTab}
+    Click Element    ${SearchForContract}
+    Wait Until Element Is Visible    ${SFC-Licensee}    timeout=45s
+    Input Text    ${SFC-Licensee}    80100
+    Click Element    ${SFC-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr
+    ${Contract}    Get Text    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]/a[1]
+    Click Link    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]/a[1]
+    Wait Until Keyword Succeeds    100s    .2s    Title Should Be    Payment Term by Contract
+    Wait Until Element Is Visible    xpath=//td[contains(text(),'${Contract}')]    timeout=45s
+    Sleep    2s
+
+TC04_Customer_Search for Customer screen if user search by Customer No
+    NavigateToHomePage
+    Element Should Be Visible    ${CustomerTab}
+    Mouse Over    ${CustomerTab}
+    Click Element    ${SearchForCustomer}
+    Wait Until Element Is Visible    ${SFC-CustomerNumber}    timeout=45s
+    Input Text    ${SFC-CustomerNumber}    80100
+    Click Element    ${SFC-Search-Btn}
+    Wait Until Element Is Visible    xpath=//table[@id='resultTable']/tbody[1]/tr[1]/td    timeout=45s
+    Log To Console    Results are fetched successfully
+    Sleep    2s
+
+TC21_Apply invoice on Cash Receipt
+    NavigateToHomePage
+    Wait Until Element Is Visible    ${CashTab}
+    Mouse Over    ${CashTab}
+    Click Element    ${AddCashReceiptLog}
+    Wait Until Element Is Visible    ${bAccountId}    timeout=45s
+    Select From List By Label    ${bAccountId}    ${BankAccId}
+    Input Text    ${DepositDate}    11-Oct-2017
+    Input Text    ${bankControlTotal}    30.00
+    Click Button    ${addBtn}
+    Wait Until Element Is Visible    ${ChkNo}    timeout=45s
+    Input Text    ${ChkNo}    100
+    Input Text    ${Payor}    Emin
+    Input Text    ${CustomerNo}    ${CustomerNumber}
+    Input Text    ${AMOUNT}    30.00
+    Click Button    ${SaveBtn}
+    Wait Until Element Is Visible    ${PostLogBtn}    timeout=45s
+    Click Button    ${PostLogBtn}
+    Handle Alert    action=ACCEPT
+    Wait Until Element Is Visible    xpath=//table[@id='dataTable1']//tbody[1]//tr[1]//td[10]/a    timeout=45s
+    Sleep    5
+    Run Keyword If    "${CashAppStatus}" == "Unapplied"    Variable.Click On Link
+    ...    ELSE    ${ErMsg}
+    Scroll Page To Location    0    1000
+    Click Button    ${SearchForInvoice-btn}
+    Wait Until Page Contains Element    xpath=//table[@id='myTable']    timeout=40s
+    Wait Until Element Is Visible    xpath=(//input[@name='chk'])[1]    timeout=60s
+    Click Element    xpath=(//input[@name='chk'])[1]
+    Log To Console    Invoice Selection Worked Successfully
+    Sleep    2s
+
+TC34_Request for SBR at contract level for multiple records
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-SearchType2-Btn}    timeout=45s
+    Wait Until Keyword Succeeds    100s    .2s    Click Element    ${SFB-SearchType2-Btn}
+    Wait Until Keyword Succeeds    100s    .2s    Click Element    ${SFB-SBRApp}
+    Wait Until Keyword Succeeds    100s    .2s    Click Element    ${SFB-SearchType1-Btn}
+    Comment    Select From List By Label    ${SFB-Licensor}    1207 - CPT Holdings, Inc.
+    Select From List By Label    ${SFB-Licensor}    ${CompanyCode}
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Sleep    8s
+    ${RowCheck}    Run Keyword And Return Status    Element Should Be Visible    (//td[@class='dx-command-select dx-editor-cell dx-editor-inline-block dx-cell-focus-disabled'][@aria-label='Select row']//div[@class='dx-select-checkbox dx-datagrid-checkbox-size dx-checkbox dx-widget'][@role='checkbox'])[1]
+    Run Keyword If    "${RowCheck}" == "False"    TC34-Error
+    Run Keyword If    "${RowCheck}" == "True"    TC34-TRUE
+    Sleep    2s
+
+TC36_Request for SBR at Installment level for single record
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-SearchType2-Btn}    timeout=45s
+    Wait Until Keyword Succeeds    100s    .2s    Click Element    ${SFB-SearchType2-Btn}
+    Wait Until Keyword Succeeds    100s    .2s    Click Element    ${SFB-SBRApp}
+    Wait Until Keyword Succeeds    100s    .2s    Click Element    ${SFB-SearchType1-Btn}
+    Comment    Select From List By Label    ${SFB-Licensor}    1207 - CPT Holdings, Inc.
+    Select From List By Label    ${SFB-Licensor}    ${CompanyCode}
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Keyword Succeeds    45    .2s    input text    xpath=(//input[@class='dx-texteditor-input'])[18]    READY FOR SBR
+    ${RowCheck}    Run Keyword And Return Status    Element Should Be Visible    ${SFB-SpecialBillRun1-btn}
+    Run Keyword If    "${RowCheck}" == "False"    TC36-Error
+    Run Keyword If    "${RowCheck}" == "True"    TC36-TRUE
+    Sleep    2s
+
+TC41_Override Due date during SBR
+    NavigateToHomePage
+    Wait Until Element Is Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-SearchType2-Btn}    timeout=45s
+    Click Element    ${SFB-SearchType1-Btn}
+    Input Text    ${SFB-ContractNum-Input}    FCN14S001Y
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Element Is Visible    xpath=//tbody//tr[3]//td[4]//a[1]    timeout=45s
+    Click Link    xpath=//tbody//tr[3]//td[4]//a[1]
+    Wait Until Keyword Succeeds    45s    .2s    input text    xpath=(//input[@class='dx-texteditor-input'])[11]    READY FOR SBR
+    Wait Until Keyword Succeeds    45s    .2s    Click Element    ${SFB-SpecialBillRun1-btn}
+    Click Element    ${SFB-CreatSpecialBill-btn}
+    Wait Until Element Is Visible    ${SFB-ReasonForRequest}    timeout=45s
+    Input Text    ${SFB-ReasonForRequest}    This is a test - TC41
+    Click Element    ${SFB-OverrideDueDate}
+    Wait Until Element Is Visible    ${SFB-DueDate}    timeout=45s
+    Input Text    ${SFB-DueDate}    ${dates.CurrentDate}
+    ${ContractNo}    Get Text    xpath=//table[@id='installmentData']/tbody[1]/tr[1]/td[1]
+    Click Button    id=submitApprv
+    Wait Until Element Is Visible    ${BillingTab}    timeout=45s
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ContractNum-Input}    timeout=45s
+    Input Text    ${SFB-ContractNum-Input}    ${ContractNo}
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Element Is Visible    xpath=//p[contains(text(),'${ContractNo}')]    timeout=40s
+    Log To Console    Record fetched successfully
+    Sleep    2s
+
+TC02_Search billing by contract number and a deal term_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingByStartOrder}
+    Comment    Wait Until Element Is Visible    ${SFBBS-ContractNo}    timeout=45s
+    Comment    Input Text    ${SFBBS-ContractNo}    KOR12D001Y
+    Comment    Press Key    ${SFBBS-ContractNo}    \\09
+    Comment    Wait Until Element Is Visible    ${SFBBS-DealTerm}    timeout=45s
+    Comment    Click Element    xpath=//select[@id='dealTerm']//option[2]
+    Comment    Click Element    ${SFBBS-Search}
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]
+    Comment    ${Count}    Get Matching Xpath Count    xpath=//table[@id='myTable']/tbody[1]
+    Comment    Run Keyword If    "${Count}" > 0    Success
+    ...    ELSE    Error
+    Comment    Sleep    2s
+
+TC01_Search Billing Trigger Date by Contract No_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingTriggerDate}
+    Comment    Input Text    ${SFBT-ContractNum}    UNK04F013X
+    Comment    Click Button    ${SFBT-Search-btn}
+    Comment    Sleep    10s
+    Comment    ${RowCheck}    Get Matching Xpath Count    xpath=//table[@id='myTable']/tbody[1]
+    Comment    Run Keyword If    ${RowCheck} == 0    Error
+    Comment    Run Keyword If    ${RowCheck} == 1    Success
+    Comment    Sleep    2s
+
+TC11_Search Billing Trigger Date by Start Order No_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Wait Until Element Is Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBillingTriggerDate}
+    Comment    Input Text    ${SFBT-StartOrderNumber}    UNK9FS16
+    Comment    Click Button    ${SFBT-Search-btn}
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]
+    Comment    ${RowCheck}    Get Matching Xpath Count    xpath=//table[@id='myTable']/tbody[1]
+    Comment    Run Keyword If    ${RowCheck} == 0    Error
+    Comment    Run Keyword If    ${RowCheck} == 1    Success
+    Comment    Sleep    2s
+
+TC39_View invoice via View Billing Schedule screen
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ContractNum-Input}    timeout=45s
+    Input Text    ${SFB-ContractNum-Input}    CHN
+    Click Element    ${SFB-SearchType1-Btn}
+    Unselect Checkbox    ${SFB-NetDueOnly-Select}
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Keyword Succeeds    100s    .2s    Wait Until Element Is Visible    xpath=//td[contains(text(),'1207')]
+    ${RowCheck}    Get Matching Xpath Count    xpath=//td[contains(text(),'1207')]
+    Run Keyword If    ${RowCheck} == 0    Error
+    Wait Until Keyword Succeeds    45s    .2s    input text    xpath=(//input[@class='dx-texteditor-input'])[18]    READY FOR SBR
+    Wait Until Keyword Succeeds    45s    .2s    Click Element    ${SFB-SpecialBillRun1-btn}
+    ${ContractNo}    Wait Until Keyword Succeeds    45s    .2s    Get Text    xpath=//tbody[1]/tr[1]/td[3]/p
+    Set Global Variable    ${ContractNo}    ${ContractNo}
+    Click Button    ${SFB-CreatSpecialBill-btn}
+    ${RowCheck}    Run Keyword And Return Status    Element Should Not Be Visible    xpath=//td[contains(text(),'The following contracts')]
+    Run Keyword iF    "${RowCheck}" == "True"    TC39_ViewInvoiceViaViewBillingSchedule-True
+    ...    ELSE    SFB-FALSE
+    Sleep    2s
+
+TC40_View start or change order template via View Billing Schedule screen_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Element Should Be Visible    ${BillingTab}
+    Comment    Mouse Over    ${BillingTab}
+    Comment    Click Element    ${SearchForBilling}
+    Comment    Wait Until Element Is Visible    ${SFB-ContractNum-Input}    timeout=45s
+    Comment    Input Text    ${SFB-ContractNum-Input}    FCN14S001Y
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Select From List By Label    ${SFB-Licensor}    5301 - SONY PICTURES ENTERTAINMENT IBERIA, S.L.U.
+    Comment    Click Element    ${SFB-SearchType2-Btn}
+    Comment    Unselect Checkbox    ${SFB-NetDueOnly-Select}
+    Comment    Click Button    ${SFB-SearchSubmit-Btn}
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Wait Until Element Is Visible    xpath=//td[contains(text(),'5301')]
+    Comment    ${RowCheck}    Get Matching Xpath Count    xpath=//td[contains(text(),'5301')]
+    Comment    Run Keyword If    ${RowCheck} == 0    Error
+    Comment    Wait Until Keyword Succeeds    45s    .2s    input text    xpath=(//input[@class='dx-texteditor-input'])[18]    READY FOR SBR
+    Comment    Wait Until Keyword Succeeds    45s    .2s    Click Element    ${SFB-SpecialBillRun1-btn}
+    Comment    ${ContractNo}    Wait Until Keyword Succeeds    45s    .2s    Get Text    xpath=//tbody[1]/tr[1]/td[3]/p
+    Comment    Set Global Variable    ${ContractNo}    ${ContractNo}
+    Comment    Click Button    ${SFB-CreatSpecialBill-btn}
+    Comment    ${RowCheck}    Run Keyword And Return Status    Element Should Not Be Visible    xpath=//td[contains(text(),'The following contracts')]
+    Comment    Run Keyword iF    "${RowCheck}" == "True"    TC40_View start or change order template via View Billing Schedule screen-True
+    ...    ELSE    SFB-FALSE
+    Comment    Sleep    2s
+
+TC01_Auto cash lift when credit memo is generated
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ContractNum-Ver2}    timeout=45s
+    Comment    Select From List By Label    ${SFB-Licensor}    1281 - Sony Pictures Television Inc.
+    Select From List By Label    ${SFB-Licensor}    ${CompanyCode}
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Sleep    10s
+    ${Status}    Run Keyword And Return Status    Element Should Be Visible    id=specialBillRunList1
+    Run Keyword If    "${Status}" == "False"    ContractNoError
+    Run Keyword If    "${Status}" == "True"    TC001_Approve cash application with auto cash lift via full amount credit memo
+    Sleep    2s
+
+TC37_Request for SBR at Product level for multiple records
+    NavigateToHomePage
+    Element Should Be Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForBilling}
+    Wait Until Element Is Visible    ${SFB-ContractNum-Input}    timeout=45s
+    Input Text    ${SFB-ContractNum-Input}    SPA10F020Y
+    Click Button    ${SFB-SearchSubmit-Btn}
+    Wait Until Keyword Succeeds    100s    .2s    Wait Until Element Is Visible    xpath=//a[contains(text(),'SPA10F020Y')]
+    Wait Until Keyword Succeeds    45s    .2s    input text    xpath=(//input[@class='dx-texteditor-input'])[18]    READY FOR SBR
+    Wait Until Keyword Succeeds    45s    .2s    Click Link    xpath=//a[contains(text(),'SPA10F020Y')]
+    Wait Until Keyword Succeeds    45s    .2s    input text    xpath=(//input[@class='dx-texteditor-input'])[11]    READY FOR SBR
+    Sleep    3s
+    ${CheckStatus}    Run Keyword And Return Status    Element Should Be Visible    ${SFB-SpecialBillRun1-btn}
+    Run Keyword If    "${CheckStatus}" == "False"    TC33_Error
+    ...    ELSE    TC37_TRUE
+    Sleep    2s
+
+TC02_Reject Miscellaneous credit Memo
+    NavigateToHomePage
+    Wait Until Element Is Visible    ${BillingTab}
+    Mouse Over    ${BillingTab}
+    Click Element    ${AddMiscBilling}
+    Wait Until Element Is Visible    ${AMB-CustNo}    timeout=45s
+    Input Text    ${AMB-CustNo}    83124
+    Press Key    ${AMB-CustNo}    \\13
+    Wait Until Keyword Succeeds    100s    .2s    Select From List By Label    ${AMB-Media}    36300 - Network
+    Wait Until Keyword Succeeds    100s    .2s    Select From List By Label    ${AMB-BillType-Select}    Merchandising
+    Wait Until Keyword Succeeds    100s    .2s    Click Button    ${AMB-B11ADD-btn}
+    Wait Until Element Is Visible    ${AMB-AmtDue-Input}    timeout=45s
+    Click Element    ${AMB-AmtDue-Input}
+    Repeat Keyword    4times    Press Key    xpath=//input[@name='amountDue']    \\127
+    Input Text    ${AMB-AmtDue-Input}    200
+    Input Text    ${AMB-ProductNum}    F8201500000
+    Wait Until Element Is Visible    ${AMB-Desc-Input}    timeout=45s
+    Input Text    ${AMB-Desc-Input}    This is a test!
+    Click Button    ${AMB-Save-Btn}
+    Scroll Page To Location    0    1000
+    Wait Until Element Is Visible    ${AMB-B11SubmitApp}    timeout=40s
+    Wait Until Keyword Succeeds    100s    .2s    Wait Until Element Is Visible    xpath=//td[@class='data3'][@id='MiscBillingScheduleID']
+    ${MiscNo}    Get Text    xpath=//td[@class='data3'][@id='MiscBillingScheduleID']
+    Click Button    ${AMB-B11SubmitApp}
+    Wait Until Keyword Succeeds    100s    .2s    Title Should Be    Home Page
+    Wait Until Element Is Visible    ${BillingTab}    timeout=45s
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForMiscBilling}
+    Wait Until Element Is Visible    ${SFMB-ReferenceNo}    timeout=40s
+    Input Text    ${SFMB-ReferenceNo}    ${MiscNo}
+    Click Element    ${AMB-Search-btn}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[10]/a[1]    timeout=45s
+    Click Link    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[10]/a[1]
+    Scroll Page To Location    0    1000
+    Wait Until Element Is Visible    ${AMB-AppBtn}    timeout=40s
+    Click Button    ${AMB-AppBtn}
+    Wait Until Element Is Visible    ${BillingTab}    timeout=45s
+    Mouse Over    ${BillingTab}
+    Click Element    ${SearchForInvoice-CreditMemo}
+    Wait Until Element Is Visible    ${SFI-FormDate-Input}    timeout=45s
+    Input Text    ${SFI-FormDate-Input}    ${dates.CurrentDate}
+    Input Text    ${SFI-ContractNum-Input}    ${MiscNo}
+    Click Element    ${SFI-Search}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]    timeout=45s
+    ${InvoiceNo}    Get Text    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[1]/a[1]
+    Wait Until Element Is Visible    ${BillingTab}    timeout=45s
+    Mouse Over    ${BillingTab}
+    Click Element    ${AddMiscCreditMemo}
+    Wait Until Element Is Visible    ${AMCM-CustomerNum}    timeout=45s
+    Input Text    ${AMCM-CustomerNum}    83124
+    Click Element    ${AMCM-CustomerNumLabel}
+    Input Text    ${AMCM-UserComm-Input}    Hello World
+    Input Text    ${AMCM-CreditMemoComment}    Hello
+    Click Button    ${AMCM-BI14Save}
+    Handle Alert    action=ACCEPT
+    Click Button    ${AMCM-Add-btn}
+    Handle Alert    action=ACCEPT
+    Wait Until Element Is Visible    ${AMCM-FromDate-Input}    timeout=30s
+    Input Text    ${AMCM-FromDate-Input}    ${dates.CurrentDate}
+    Input Text    ${AMCM-InvoiceNum}    ${InvoiceNo}
+    Click Element    ${AMCM-SearchBtn}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[13]/input[1]    timeout=40s
+    Click Element    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[13]/input[1]
+    Click Button    ${AMCM-CashAppMode-Btn}
+    Wait Until Element Is Visible    ${AMCM-CreditFull-Select}    timeout=40s
+    Click Element    ${AMCM-CreditFull-Select}
+    Wait Until Keyword Succeeds    100s    .2s    Click Button    ${AMCM-B11SubApp-btn}
+    Handle Alert    action=ACCEPT
+    Wait Until Element Is Visible    ${BillingTab}    timeout=45s
+    Mouse Over    ${BillingTab}
+    Click Element    ${App-MiscCreditMemo}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[13]/select[1]    timeout=45s
+    Select From List By Label    xpath=//table[@id='myTable']/tbody[1]/tr[1]/td[13]/select[1]    Reject
+    Click Button    ${APMCM-SubmitForApp-btn}
+    Wait Until Element Is Visible    xpath=//table[@id='myTable1']/tbody[1]/tr[1]/td[7]    timeout=45s
+    Element Text Should Be    xpath=//table[@id='myTable1']/tbody[1]/tr[1]/td[7]    Rejected
+    Sleep    2s
+
+TC09_Contracts_Mobile Start Order Search Screen_Contract Reference number_TestCaseOutDated
+    Comment    NavigateToHomePage
+    Comment    Wait Until Element Is Visible    ${ContractTab}    timeout=45s
+    Comment    Mouse Over    ${ContractTab}
+    Comment    Click Element    ${SearchForMobileStartOrder}
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Select Window    Please login
+    Comment    Wait Until Element Is Visible    ${UserName}    timeout=45s
+    Comment    Input Text    ${UserName}    sde3
+    Comment    Input Text    ${PassWord}    Bapibarija100%
+    Comment    Click Button    ${Login-btn}
+    Comment    Wait Until Element Is Visible    ${Mobile-StartOrder-Link}    timeout=45s
+    Comment    Click Link    ${Mobile-StartOrder-Link}
+    Comment    Wait Until Keyword Succeeds    100s    .2s    Select Window    Mobile Start Order Search/Results
+    Comment    Wait Until Element Is Visible    ${DealNo-Input}    timeout=45s
+    Comment    Input Text    ${DealNo-Input}    AUS07W001Y
+    Comment    Click Element    ${SFMSO-Search-btn}
+    Comment    Wait Until Element Is Visible    ${SFMSO-TableBody}    timeout=45s
+    Comment    Sleep    2s

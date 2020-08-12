@@ -1,0 +1,23 @@
+*** Variables ***
+${CustInvoicePreferences}    css=a[href$='customerInvoicePref']
+${CustIP-CustNo}    xpath=//input[@name='customerNo']
+${CustIP-BillingServOffice}    id=billingServicingOfficeId
+${CustIP-CashServiceOffice}    id=cashServicingOfficeId
+${CustIP-SapProfitCenter}    id=SAPProfitCenterId
+${CustIP-SapCompanyId}    id=SAPCompanyId
+${CustIP-ITSMLicesnce}    id=ITSMLicensorCriteria
+${CustIP-BillingCurrency}    id=billingCurrencyCriteria
+${CustIP-RemToCriteria}    id=remitToCriteria
+${CustIP-TaxAreaCriteria}    id=taxAreaCriteria
+${CustIP-TaxCurrency}    id=taxCurrencyCriteria
+${CustIP-TaxRemit}    id=taxRemitToCriteria
+${CustIP-AccMethod}    id=accountingMethodCriteria
+${CustIP-CashReceiptType}    id=cashReceiptTypeCriteria
+${CustIP-InvoiceTemplateCriteria}    id=invoiceTemplateCriteria
+${CustIP-InvoiceDetail}    id=invoiceDetailCriteria
+${CustIP-InvoiceDelivery}    id=invoiceDeliveryCriteria
+${CustIP-SPEcollection}    id=SPECollectionsContactCriteria
+${CustIP-SPEbilling}    id=SPEBillingContactCriteria
+${CustIP-SPEname}    xpath=//input[@name='customerName']
+${CustIP-SearchForCustomer-btn}    xpath=//input[@name='searchForCustomer']
+${CustIP-Update}    xpath=//td[contains(text(),'Update')]
